@@ -5,12 +5,22 @@ import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { FcGoogle } from 'react-icons/fc'; 
+import { signInWithGoogle } from '@/lib/auth';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const router = useRouter();
+  const handleGoogleSignIn = async () => {
+    try {
+      await signInWithGoogle();
+      router.push('/dashboard');
+    } catch (error: any) {
+      setError('Failed to sign in with Google');
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,6 +30,7 @@ export default function LoginPage() {
     } catch (error: any) {
       setError('Failed to login. Please check your credentials.');
     }
+
   };
 
   return (
@@ -64,6 +75,23 @@ export default function LoginPage() {
               />
             </div>
           </div>
+          <div className="relative">
+  <div className="absolute inset-0 flex items-center">
+    <div className="w-full border-t border-gray-300" />
+  </div>
+  <div className="relative flex justify-center text-sm">
+    <span className="px-2 bg-white text-gray-500">Or continue with</span>
+  </div>
+</div>
+
+<button
+  type="button"
+  onClick={handleGoogleSignIn}
+  className="w-full flex justify-center items-center gap-2 px-4 py-2 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+>
+  <FcGoogle className="h-5 w-5" />
+  Sign in with Google
+</button>
 
           <div>
             <button
